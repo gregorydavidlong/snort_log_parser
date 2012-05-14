@@ -30,11 +30,13 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
       end
 
       it "gets source IP" do
-        @entry.source_ip.should == "123.30.174.116:80"
+        @entry.source_ip.should == "123.30.174.116"
+        @entry.source_port.should == "80"
       end
 
       it "gets destination IP" do
-        @entry.destination_ip.should == "115.146.93.245:57964"
+        @entry.destination_ip.should == "115.146.93.245"
+        @entry.destination_port.should == "57964"
       end
 
       it "gets datagram length" do
@@ -53,10 +55,12 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
 
       it "gets source IP" do
         @entry.source_ip.should == "1.151.79.26"
+        @entry.source_port.should == nil
       end
 
       it "gets destination IP" do
         @entry.destination_ip.should == "115.146.94.29"
+        @entry.destination_port == nil
       end
 
       it "gets datagram length" do
@@ -91,7 +95,8 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
         end
 
         it "should have correct values" do
-          @entry.source_ip.should == "128.250.152.217:59444"
+          @entry.source_ip.should == "128.250.152.217"
+          @entry.source_port.should == "59444"
         end
       end
 

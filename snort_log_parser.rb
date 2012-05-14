@@ -12,8 +12,17 @@ class SnortLogParser
   def parse_entry(entry_text)
     entry = Entry.new
     parsed_array = @@re.match(entry_text)
-    entry.source_ip = parsed_array[3]
-    entry.destination_ip = parsed_array[4]
+
+    #parse the source IP
+    parsed_source_ip = parsed_array[3].split(":")
+    entry.source_ip = parsed_source_ip[0]
+    entry.source_port = parsed_source_ip[1] if parsed_source_ip.length == 2
+
+    #parse the destination IP
+    parsed_destination_ip = parsed_array[4].split(":")
+    entry.destination_ip = parsed_destination_ip[0]
+    entry.destination_port = parsed_destination_ip[1] if parsed_destination_ip.length == 2
+
     entry.datagram_length = parsed_array[9].to_i
     entry.time = parse_time(parsed_array[1], parsed_array[2])
     entry.packet = entry_text
@@ -49,11 +58,12 @@ class SnortLogParser
     entry_text = ""
     entries = []
     File.open(filename).each_line do |line|
-      entry_text << line
       if line.include? @@entry_separator
         entry = parse_entry(entry_text)
         entry_text = ""
         entries << entry
+      else
+        entry_text << line
       end
     end
     entries
@@ -62,12 +72,7 @@ class SnortLogParser
   # Do some analysis. Look for pairs of entries that seem related,
   # that is, match an encrypted packet with its plain text version.
   def analyse(filename, ips_of_interest)
-    # The file to analyse
-    #filename = "large_test_data.log"
     entries = parse_file(filename)
-
-    # IPs of mobile devices
-    #ips_of_interest = ["1.151.79.26", "128.250.152.198"]
 
     # Pairs of entries that we believe are related
     pairs = []
@@ -108,7 +113,7 @@ class SnortLogParser
 end
 
 class Entry
-  attr_accessor :source_ip, :destination_ip, :datagram_length, :packet, :time
+  attr_accessor :source_ip, :destination_ip, :datagram_length, :packet, :time, :source_port, :destination_port
 
   def initialize
   end
