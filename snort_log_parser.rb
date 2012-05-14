@@ -61,29 +61,38 @@ class SnortLogParser
 
   # Do some analysis. Look for pairs of entries that seem related,
   # that is, match an encrypted packet with its plain text version.
-  def analyse
+  def analyse(filename, ips_of_interest)
     # The file to analyse
-    filename = "large_test_data.log"
+    #filename = "large_test_data.log"
     entries = parse_file(filename)
+
+    # IPs of mobile devices
+    #ips_of_interest = ["1.151.79.26", "128.250.152.198"]
 
     # Pairs of entries that we believe are related
     pairs = []
     
-    enc_entry = nil
-    desired_datagram_length = -1
+    enc_entries = Hash.new
+    desired_datagram_lengths = Hash.new
 
     for entry in entries do
-      if (desired_datagram_length == entry.datagram_length)
-        desired_datagram_length = -1
-        pairs << [enc_entry, entry]
-      end
 
       # Is the entry for an IP we're interested in (i.e. the IP of a mobile device
-      if (entry.source_ip.include? "1.151.79.26")
-        # There should be a corresponding packet that is 41 characters shorter
-        desired_datagram_length = entry.datagram_length - 41
-        enc_entry = entry
+      for ip in ips_of_interest do
+        if (entry.source_ip.include? ip)
+          # There should be a corresponding packet that is 41 characters shorter
+          desired_datagram_lengths[entry.datagram_length - 41] = ip
+          enc_entries[entry.datagram_length - 41] = entry
+        end
       end
+
+      matching_ip = desired_datagram_lengths[entry.datagram_length]
+      if (matching_ip != nil)
+        pairs << [enc_entries[entry.datagram_length], entry]
+        desired_datagram_lengths[entry.datagram_length] = nil
+        enc_entries[entry.datagram_length] = nil
+      end
+
     end
 
     # Print the pairs
@@ -94,6 +103,7 @@ class SnortLogParser
       puts
       puts
     end
+    pairs
   end
 end
 

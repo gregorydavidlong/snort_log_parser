@@ -1,9 +1,10 @@
 require 'snort_log_parser'
 
 describe SnortLogParser do
-  it "should work" do
+  it "should work for large test data" do
     logParser = SnortLogParser.new
-    logParser.analyse
+    pairs = logParser.analyse("large_test_data.log", ["1.151.79.26", "128.250.152.198"])
+    pairs.should_not == nil
   end
 
   describe "parse a single entry" do
