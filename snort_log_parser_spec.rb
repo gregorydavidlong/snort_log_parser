@@ -1,6 +1,11 @@
 require 'snort_log_parser'
 
 describe SnortLogParser do
+  it "should work" do
+    logParser = SnortLogParser.new
+    logParser.analyse
+  end
+
   describe "parse a single entry" do
   
     before(:each) do
@@ -32,7 +37,7 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
       end
 
       it "gets datagram length" do
-        @entry.datagram_length.should == "40"
+        @entry.datagram_length.should == 40
       end
     end
 
@@ -50,7 +55,7 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
       end
 
       it "gets datagram length" do
-        @entry.datagram_length.should == "808"
+        @entry.datagram_length.should == 808
       end
     end
   end
