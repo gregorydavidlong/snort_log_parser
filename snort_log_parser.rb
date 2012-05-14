@@ -9,8 +9,21 @@ class SnortLogParser
     entry.source_ip = parsed_array[3]
     entry.destination_ip = parsed_array[4]
     entry.datagram_length = parsed_array[9].to_i
+    entry.time = parse_time(parsed_array[1], parsed_array[2])
     entry.packet = entry_text
     entry
+  end
+
+  def parse_time(date_string, time_string)
+    date_match = /(\d+)\/(\d+)/.match(date_string)
+    month = date_match[1]
+    day = date_match[2]
+
+    time_match = /(\d+):(\d+):(\d+)\.(\d+)/.match(time_string)
+    hour = time_match[1]
+    minute = time_match[2]
+    second = time_match[3]
+    Time.local(2012, month, day, hour, minute, second)
   end
 
   def parse_file(filename)
@@ -57,7 +70,7 @@ class SnortLogParser
 end
 
 class Entry
-  attr_accessor :source_ip, :destination_ip, :datagram_length, :packet
+  attr_accessor :source_ip, :destination_ip, :datagram_length, :packet, :time
 
   def initialize
   end
