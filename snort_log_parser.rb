@@ -1,8 +1,14 @@
 class SnortLogParser
   @@re = /(\d{2}\/\d{2})-(\d{2}:\d{2}:\d{2}.\d+)\s(.+)\s->\s(.+)?\n(.+)\sTTL:(\d+)\sTOS:0x[ABCDEF0123456789]+\sID:(\d+)\sIpLen:(\d+)\sDgmLen:(\d+)/
 
-    @@entry_separator = "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+"
+  @@entry_separator = "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+"
 
+  # Parse an entry
+  # * *Args* :
+  #   - +entry_text+ -> The text for an "entry" in the snort log file
+  # * *Returns* :
+  #   - The parsed entry text as an +Entry+ object
+  #
   def parse_entry(entry_text)
     entry = Entry.new
     parsed_array = @@re.match(entry_text)
@@ -14,6 +20,13 @@ class SnortLogParser
     entry
   end
 
+  # Parse the time
+  # * *Args* :
+  #   - +date_string+ -> A string representing the date. Like "mm/dd"
+  #   - +time_string+ -> A string representing the time. Like "hh:mm:ss.xxxxxx"
+  # * *Returns* :
+  #   - Returns the time parsed as a +Time+ object
+  #
   def parse_time(date_string, time_string)
     date_match = /(\d+)\/(\d+)/.match(date_string)
     month = date_match[1]
@@ -26,6 +39,12 @@ class SnortLogParser
     Time.local(2012, month, day, hour, minute, second)
   end
 
+  # Parse the given snort log file into a list of Entry objects
+  # * *Args* :
+  #   - +filename+ -> The name of the snort file to parse.
+  # * *Returns* :
+  #   - A list of Entry objects, representing the contents of the snort log file.
+  #
   def parse_file(filename)
     entry_text = ""
     entries = []
@@ -40,9 +59,14 @@ class SnortLogParser
     entries
   end
 
+  # Do some analysis. Look for pairs of entries that seem related,
+  # that is, match an encrypted packet with its plain text version.
   def analyse
+    # The file to analyse
     filename = "large_test_data.log"
     entries = parse_file(filename)
+
+    # Pairs of entries that we believe are related
     pairs = []
     
     enc_entry = nil
@@ -53,12 +77,16 @@ class SnortLogParser
         desired_datagram_length = -1
         pairs << [enc_entry, entry]
       end
+
+      # Is the entry for an IP we're interested in (i.e. the IP of a mobile device
       if (entry.source_ip.include? "1.151.79.26")
+        # There should be a corresponding packet that is 41 characters shorter
         desired_datagram_length = entry.datagram_length - 41
         enc_entry = entry
       end
     end
 
+    # Print the pairs
     for pair in pairs do
       puts "+++++++PAIR+++++++"
       puts pair[0].packet
