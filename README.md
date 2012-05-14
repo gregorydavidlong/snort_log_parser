@@ -7,9 +7,11 @@ It does this matching (in a fairly dodgy way) by looking at the packet length of
 # Creating the log files
 
 Use a command like the following to start logging with snort:
+  
   snort.bin -dev -l ./log_directory
 
 Use a command like the following to create a plain text version of a binary log file:
+  
   snort -dv -r snort_binary.log.1336714497 > snort_plain_text.log
 
 # Running the parser
