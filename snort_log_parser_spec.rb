@@ -1,43 +1,106 @@
 require 'snort_log_parser'
 
 describe SnortLogParser do
-  before(:each) do
-    @test_data_1 = %Q{05/11-05:36:02.774215 123.30.174.116:80 -> 115.146.93.245:57964
+  describe "parse a single entry" do
+  
+    before(:each) do
+      @test_data_1 = %Q{05/11-05:36:02.774215 123.30.174.116:80 -> 115.146.93.245:57964
 TCP TTL:107 TOS:0x0 ID:26770 IpLen:20 DgmLen:40 DF
 ***A*R** Seq: 0x0  Ack: 0x3C74EF5E  Win: 0x0  TcpLen: 20}
 
-    @test_data_2 = %Q{05/11-05:36:03.623624 1.151.79.26 -> 115.146.94.29
+      @test_data_2 = %Q{05/11-05:36:03.623624 1.151.79.26 -> 115.146.94.29
 GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
 
-    @logParser = SnortLogParser.new
+      @logParser = SnortLogParser.new
+    end
+
+    it "handles invalid data" do
+      lambda {@logParser.parse_entry("abcd")}.should raise_error
+    end
+
+    describe "from test_data_1" do
+      before(:each) do
+        @entry = @logParser.parse_entry(@test_data_1)
+      end
+
+      it "gets source IP" do
+        @entry.source_ip.should == "123.30.174.116:80"
+      end
+
+      it "gets destination IP" do
+        @entry.destination_ip.should == "115.146.93.245:57964"
+      end
+
+      it "gets datagram length" do
+        @entry.datagram_length.should == "40"
+      end
+    end
+
+    describe "from test_data_2" do
+      before(:each) do
+        @entry = @logParser.parse_entry(@test_data_2)
+      end
+
+      it "gets source IP" do
+        @entry.source_ip.should == "1.151.79.26"
+      end
+
+      it "gets destination IP" do
+        @entry.destination_ip.should == "115.146.94.29"
+      end
+
+      it "gets datagram length" do
+        @entry.datagram_length.should == "808"
+      end
+    end
   end
 
-  describe "from test_data_1" do
+  describe "parse multiple entries" do
     before(:each) do
-      @entry = @logParser.parse_entry(@test_data_1)
+      
     end
 
-    it "gets source IP" do
-      @entry.source_ip.should == "123.30.174.116"
+    describe "from small test data" do
+      before(:each) do
+        @log_parser = SnortLogParser.new
+        @filename = "small_test_data.log"
+        @entries = @log_parser.parse_file(@filename)
+      end
+
+      it "should parse 3 entries" do
+        @entries.length.should == 3
+      end
+
+      describe "the first entry" do
+        before(:each) do
+          @entry = @entries[0]
+        end
+
+        it "should have correct values" do
+          @entry.source_ip.should == "128.250.152.217:59444"
+        end
+      end
+
+      describe "the second entry" do
+        before(:each) do
+          @entry = @entries[1]
+        end
+
+        it "should have a packet body" do
+          @entry.packet.should_not == nil
+        end
+      end
     end
 
-    it "gets destination IP" do
-      @entry.destination_ip.should == "115.146.93.245"
-    end
-  end
-
-  describe "from test_data_2" do
-    before(:each) do
-      @entry = @logParser.parse_entry(@test_data_2)
-    end
-
-    it "gets source IP" do
-      @entry.source_ip.should == "1.151.79.26"
+    describe "from large test data" do
+      it "should parse the file" do
+        log_parser = SnortLogParser.new
+        filename = "large_test_data.log"
+        entries = log_parser.parse_file(filename)
+        entries.length.should == 5278
+      end
     end
 
-    it "gets destination IP" do
-      @entry.destination_ip.should == "115.146.94.29"
-    end
   end
 
 end
