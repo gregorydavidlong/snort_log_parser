@@ -20,6 +20,10 @@ describe OpenpathsLocationParser do
   end
 
   describe "multiple entries" do
-    it "should be parsed correctly"
+    it "should be parsed correctly" do
+      multiple_entries = "test_data/multiple_entries.json"
+      parsed = @parser.parse(multiple_entries)
+      parsed.length == 3
+    end
   end
 end
