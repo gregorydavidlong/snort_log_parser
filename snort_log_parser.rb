@@ -1,5 +1,5 @@
 class SnortLogParser
-  @@re = /(\d{2}\/\d{2})-(\d{2}:\d{2}:\d{2}.\d+)\s(.+)\s->\s(.+)?\n(.+)\sTTL:(\d+)\sTOS:0x[ABCDEF0123456789]+\sID:(\d+)\sIpLen:(\d+)\sDgmLen:(\d+)/
+  @@re = /(\d{2}\/\d{2})-(\d{2}:\d{2}:\d{2}.\d+)\s(.+)\s->\s(.+)?\n(.+)\sTTL:(\d+)\sTOS:0x[A-F0-9]+\sID:(\d+)\sIpLen:(\d+)\sDgmLen:(\d+)/
 
   @@entry_separator = "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+"
 
@@ -10,17 +10,19 @@ class SnortLogParser
   #   - The parsed entry text as an +Entry+ object
   #
   def parse_entry(entry_text)
+    #puts "Parsing : " + entry_text
     entry = Entry.new
     parsed_array = @@re.match(entry_text)
 
     #parse the source IP
     parsed_source_ip = parsed_array[3].split(":")
-    entry.source_ip = parsed_source_ip[0]
+    entry.source_ip = parsed_source_ip[0].to_s
     entry.source_port = parsed_source_ip[1] if parsed_source_ip.length == 2
+    fail if entry.source_ip == nil
 
     #parse the destination IP
     parsed_destination_ip = parsed_array[4].split(":")
-    entry.destination_ip = parsed_destination_ip[0]
+    entry.destination_ip = parsed_destination_ip[0].to_s
     entry.destination_port = parsed_destination_ip[1] if parsed_destination_ip.length == 2
 
     entry.datagram_length = parsed_array[9].to_i

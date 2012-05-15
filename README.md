@@ -8,7 +8,7 @@ It does this matching (in a fairly dodgy way) by looking at the packet length of
 
 Use a command like the following to start logging with snort:
   
-    snort.bin -dev -l ./log_directory
+    snort -dev -l ./log_directory
 
 Use a command like the following to create a plain text version of a binary log file:
   

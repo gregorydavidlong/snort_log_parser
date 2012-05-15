@@ -1,9 +1,16 @@
-require 'snort_log_parser'
+require './snort_log_parser'
 
 describe SnortLogParser do
-  it "should work for large test data" do
+
+  #it "should work for large test data" do
+  #  logParser = SnortLogParser.new
+  #  pairs = logParser.analyse("large_test_data.log", ["1.151.79.26", "128.250.152.198"])
+  #  pairs.should_not == nil
+  #end
+
+  it "should parse test data for 20120515 11:29am" do
     logParser = SnortLogParser.new
-    pairs = logParser.analyse("large_test_data.log", ["1.151.79.26", "128.250.152.198"])
+    pairs = logParser.analyse("traffic_data/log_20120515/snort.log.1337044274.txt", ["1.139.177.134"])
     pairs.should_not == nil
   end
 
@@ -81,7 +88,7 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
     describe "from small test data" do
       before(:each) do
         @log_parser = SnortLogParser.new
-        @filename = "small_test_data.log"
+        @filename = "test_data/small_test_data.log"
         @entries = @log_parser.parse_file(@filename)
       end
 
@@ -114,7 +121,7 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
     describe "from large test data" do
       it "should parse the file" do
         log_parser = SnortLogParser.new
-        filename = "large_test_data.log"
+        filename = "test_data/large_test_data.log"
         entries = log_parser.parse_file(filename)
         entries.length.should == 5278
       end
