@@ -142,4 +142,26 @@ describe Entry do
   it "should have correct source_ip" do
     @entry.source_ip.should == @source_ip
   end
+
+  describe "using a hashmap" do
+    it "should create an entry" do
+      args = {
+         :source_ip => "1.2.3.4", 
+         :destination_ip => "2.3.4.5", 
+         :datagram_length => 123, 
+         :packet => "1234", 
+         :time => Time.at(100), 
+         :source_port => 80, 
+         :destination_port => 81
+      }
+      entry = Entry.new(args)
+      entry.source_ip.should == "1.2.3.4"
+      entry.destination_ip.should == "2.3.4.5"
+      entry.datagram_length.should == 123
+      entry.packet.should == "1234"
+      entry.time.should == Time.at(100)
+      entry.source_port.should == 80
+      entry.destination_port.should == 81
+    end
+  end
 end

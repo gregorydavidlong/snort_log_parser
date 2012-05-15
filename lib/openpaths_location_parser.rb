@@ -33,4 +33,8 @@ class LocationPoint
   def self.json_create o
     new *o
   end
+
+  def to_s
+    latitude.to_s + "," + longitude.to_s + " (" + time.to_s + ")"
+  end
 end

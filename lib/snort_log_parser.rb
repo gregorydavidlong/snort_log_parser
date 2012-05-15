@@ -103,13 +103,13 @@ class SnortLogParser
     end
 
     # Print the pairs
-    for pair in pairs do
-      puts "+++++++PAIR+++++++"
-      puts pair[0].packet
-      puts pair[1].packet
-      puts
-      puts
-    end
+    #for pair in pairs do
+    #  puts "+++++++PAIR+++++++"
+    #  puts pair[0].packet
+    #  puts pair[1].packet
+    #  puts
+    #  puts
+    #end
     pairs
   end
 end
@@ -117,6 +117,10 @@ end
 class Entry
   attr_accessor :source_ip, :destination_ip, :datagram_length, :packet, :time, :source_port, :destination_port
 
-  def initialize
+  def initialize(hash = nil)
+    hash.each do |k,v| 
+      instance_variable_set("@#{k}", v)  ## create and initialize an instance variable for this key/value pair 
+      instance_eval %Q{ class << self ; attr_reader #{k.intern.inspect} ; end } 
+    end if hash != nil 
   end
 end
