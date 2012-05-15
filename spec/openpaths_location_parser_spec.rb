@@ -1,4 +1,4 @@
-require './openpaths_location_parser'
+require 'openpaths_location_parser'
 
 describe OpenpathsLocationParser do
   before(:each) do

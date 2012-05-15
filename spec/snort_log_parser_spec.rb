@@ -1,4 +1,4 @@
-require './snort_log_parser'
+require 'snort_log_parser'
 
 describe SnortLogParser do
 
