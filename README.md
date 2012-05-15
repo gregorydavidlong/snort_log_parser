@@ -16,7 +16,7 @@ Use a command like the following to create a plain text version of a binary log 
 
 # Running the parser
 
-The `SnortLogParser#analyse` function in the main entry point. Look at the rspec tests for an example usage.
+The `Analyser#analyse` function in the main entry point. Look at the rspec tests for an example usage.
 
 Use the rake command to run the rspec tests:
 
