@@ -47,7 +47,7 @@ class SnortLogParser
     hour = time_match[1]
     minute = time_match[2]
     second = time_match[3]
-    Time.local(2012, month, day, hour, minute, second)
+    Time.utc(2012, month, day, hour, minute, second)
   end
 
   # Parse the given snort log file into a list of Entry objects

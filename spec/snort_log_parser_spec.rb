@@ -51,7 +51,7 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
       end
 
       it "get the time" do
-        @entry.time.should == Time.local(2012, 5, 11, 5, 36, 02)
+        @entry.time.should == Time.utc(2012, 5, 11, 5, 36, 02)
       end
     end
 
@@ -79,7 +79,7 @@ GRE TTL:239 TOS:0x0 ID:20193 IpLen:20 DgmLen:808}
   describe "parse time" do
     it "from example" do
       log_parser = SnortLogParser.new
-      log_parser.parse_time("05/11", "05:34:58.614585").should == Time.local(2012, 5, 11, 5, 34, 58)
+      log_parser.parse_time("05/11", "05:34:58.614585").should == Time.utc(2012, 5, 11, 5, 34, 58)
     end
   end
 
