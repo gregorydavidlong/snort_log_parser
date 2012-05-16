@@ -2,3 +2,4 @@
 location_data
 scratch
 traffic_data
+*.log

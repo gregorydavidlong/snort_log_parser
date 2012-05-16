@@ -187,6 +187,13 @@ In `snort_log_parser_spec.rb` add:
       @analyser.analyse(snortfile, openpathsfile, user_ip)
     end
 
-A list of datagrams with their corresponding locations for the nominated mobile device IP address.
+A list of datagrams with their corresponding locations for the nominated mobile device IP address should be displayed.
 
 
+# Future enhancements
+
+* Make the output neater and easier to read
+* Add graphical data visualisation
+* Finish incomplete unit tests
+* Add automatic parsing of output from `last` command for selection of IP address. This will also require adding a date range for which we are interested in the IP address.
+* Add parsing of KML location data
