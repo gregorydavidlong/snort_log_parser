@@ -43,7 +43,7 @@ We're using OpenPaths to collect location data for the mobile device.
 
 ## SSH to VPN
 
-ssh -l ubuntu -i ~/.ssh/jared_vpn.pem 115.146.94.29
+    ssh -l ubuntu -i ~/.ssh/jared_vpn.pem 115.146.94.29
 
 ## Output of `last` on VPN
 
@@ -178,14 +178,14 @@ You can download the location data for your mobile device from https://openpaths
 
 I've been running the application using rspec tests.
 
-In snort_log_parser_spec.rb add:
+In `snort_log_parser_spec.rb` add:
 
-  it "should match snort log files with location data" do
-    snortfile = "traffic_data/log_20120515/snort.log.1337044274.txt"
-    openpathsfile = "location_data/openpaths_gregorydavidlong.json"
-    user_ip = "1.139.177.134"
-    @analyser.analyse(snortfile, openpathsfile, user_ip)
-  end
+    it "should match snort log files with location data" do
+      snortfile = "traffic_data/log_20120515/snort.log.1337044274.txt"
+      openpathsfile = "location_data/openpaths_gregorydavidlong.json"
+      user_ip = "1.139.177.134"
+      @analyser.analyse(snortfile, openpathsfile, user_ip)
+    end
 
 A list of datagrams with their corresponding locations for the nominated mobile device IP address.
 
