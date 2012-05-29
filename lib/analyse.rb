@@ -24,8 +24,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'snort_log_parser'
-require 'openpaths_location_parser'
+require './lib/snort_log_parser'
+require './lib/openpaths_location_parser'
 
 class Analyser
   def initialize
@@ -69,3 +69,16 @@ class Analyser
     end
   end
 end
+
+# command line arguments
+if ARGV.length < 3
+  puts "Usage: ruby analyse.rb snort_input_file openpaths_json_file user_ip_address"
+else
+  snortfile = ARGV[0]
+  openpathsfile = ARGV[1]
+  user_ip = ARGV[2]
+  analyser = Analyser.new
+  analyser.analyse(snortfile, openpathsfile, user_ip)
+end
+
+
