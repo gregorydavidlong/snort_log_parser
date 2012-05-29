@@ -174,18 +174,15 @@ Make sure its still connected to the VPN, and navigate to some web pages. For ex
 You can download the location data for your mobile device from https://openpaths.cc/
 
 
-## Add an rspec test to process the data
+## Run analyse.rb
 
-I've been running the application using rspec tests.
+Run analyse. The usage is:
 
-In `snort_log_parser_spec.rb` add:
+    ruby analyse.rb snort_input_file openpaths_json_file user_ip_address
 
-    it "should match snort log files with location data" do
-      snortfile = "traffic_data/log_20120515/snort.log.1337044274.txt"
-      openpathsfile = "location_data/openpaths_gregorydavidlong.json"
-      user_ip = "1.139.177.134"
-      @analyser.analyse(snortfile, openpathsfile, user_ip)
-    end
+So, for example:
+
+    ruby analyse.rb traffic_data/log_20120515/snort.log.1337044274.txt location_data/openpaths_gregorydavidlong.json 1.139.177.134
 
 A list of datagrams with their corresponding locations for the nominated mobile device IP address should be displayed.
 
