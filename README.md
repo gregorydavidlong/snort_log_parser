@@ -22,6 +22,10 @@ Use the rake command to run the rspec tests:
 
     rake
 
+The analyser can also run from the command line:
+
+    ruby lib/analyse.rb snort_input_file openpaths_json_file user_ip_address
+
 # An example usage
 
 Here is an example of running through the procedure of gathering data and analysing it.
